@@ -1,17 +1,21 @@
 package DAO;
 
 
-import java.sql.*;
+import DTO.StudentDTO;
+import DTO.TeacherDTO;
 
-public class TeacherDAO extends SuperDAO{
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class TeacherDAO extends SuperDAO<TeacherDTO>{
     private Connection conn;
 
     public TeacherDAO() throws SQLException {
         this.conn = super.getConnection();
     }
-    public boolean checkTeacher(String id, String pwd) throws SQLException {
+    public boolean checkTeacher(String id, String pwd)  {
         String query = "select * from teacher";
-        PreparedStatement ps = conn.prepareStatement(query);
 
         try {
             Statement stmt = conn.createStatement();
@@ -30,4 +34,29 @@ public class TeacherDAO extends SuperDAO{
 
     }
 
+    @Override
+    public List<TeacherDTO> selectAll() {
+        String query = "select * from teacher";
+        List<TeacherDTO> teacherDTOList = new ArrayList<>();
+
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                TeacherDTO teacherDTO = TeacherDTO.builder()
+                        .teacherName(rs.getString("teacherName"))
+                        .gender(rs.getString("gender"))
+                        .classNumber(rs.getInt("classNumber"))
+                        .subject(rs.getString("subject"))
+                        .rank(rs.getString("rank"))
+                        .build();
+                teacherDTOList.add(teacherDTO);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(System.err);
+        }
+
+        return  teacherDTOList;
+    }
 }

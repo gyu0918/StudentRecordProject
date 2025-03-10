@@ -1,10 +1,12 @@
 package DAO;
 
-import lombok.*;
+
+import ENTITY.Score;
+
 import java.sql.*;
+import java.util.*;
 
-
-public  class SuperDAO {
+public  class SuperDAO<T> {
     private String url = "jdbc:mariadb://localhost:3306/product";
     private String user = "root";
     private String password = "1234";
@@ -15,6 +17,10 @@ public  class SuperDAO {
     }
     public Connection getConnection() {
         return conn;
+    }
+
+    public List<T> selectAll() throws SQLException {
+        return new ArrayList<>();
     }
 
     public void add(){
